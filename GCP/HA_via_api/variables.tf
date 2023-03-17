@@ -50,6 +50,16 @@ variable "intSubnet" {
   default     = null
   description = "Internal subnet"
 }
+variable "intSubnet2" {
+  type        = string
+  default     = null
+  description = "Internal subnet"
+}
+variable "intSubnet3" {
+  type        = string
+  default     = null
+  description = "Internal subnet"
+}
 variable "mgmtSubnet" {
   type        = string
   default     = null
@@ -93,6 +103,7 @@ variable "f5_password" {
 variable "ssh_key" {
   type        = string
   description = "public key used for authentication in /path/file format (e.g. /.ssh/id_rsa.pub)"
+  default     = "~/.ssh/id_rsa.pub"
 }
 variable "gcp_secret_manager_authentication" {
   type        = bool

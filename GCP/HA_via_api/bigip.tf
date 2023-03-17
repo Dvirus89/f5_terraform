@@ -61,6 +61,22 @@ resource "google_compute_address" "int" {
   region       = replace(var.gcp_zone_1, "/-[a-z]$/", "")
 }
 
+# Reserve IPs on internal2 subnet for BIG-IP 1 nic3
+resource "google_compute_address" "int1-2" {
+  name         = format("%s-bigip-int2-%s", var.projectPrefix, random_id.buildSuffix.hex)
+  subnetwork   = var.intSubnet2
+  address_type = "INTERNAL"
+  region       = replace(var.gcp_zone_1, "/-[a-z]$/", "")
+}
+
+# Reserve IPs on internal subnet for BIG-IP 1 nic4
+resource "google_compute_address" "int1-3" {
+  name         = format("%s-bigip-int3-%s", var.projectPrefix, random_id.buildSuffix.hex)
+  subnetwork   = var.intSubnet3
+  address_type = "INTERNAL"
+  region       = replace(var.gcp_zone_1, "/-[a-z]$/", "")
+}
+
 # Reserve IPs on external subnet for BIG-IP 2 nic0
 resource "google_compute_address" "ext2" {
   name         = format("%s-bigip2-ext-%s", var.projectPrefix, random_id.buildSuffix.hex)
@@ -92,6 +108,23 @@ resource "google_compute_address" "int2" {
   address_type = "INTERNAL"
   region       = replace(var.gcp_zone_2, "/-[a-z]$/", "")
 }
+
+# Reserve IPs on internal subnet for BIG-IP 2 nic3
+resource "google_compute_address" "int2-2" {
+  name         = format("%s-bigip2-int2-%s", var.projectPrefix, random_id.buildSuffix.hex)
+  subnetwork   = var.intSubnet2
+  address_type = "INTERNAL"
+  region       = replace(var.gcp_zone_2, "/-[a-z]$/", "")
+}
+
+# Reserve IPs on internal subnet for BIG-IP 2 nic4
+resource "google_compute_address" "int2-3" {
+  name         = format("%s-bigip2-int3-%s", var.projectPrefix, random_id.buildSuffix.hex)
+  subnetwork   = var.intSubnet3
+  address_type = "INTERNAL"
+  region       = replace(var.gcp_zone_2, "/-[a-z]$/", "")
+}
+
 
 ############################ Onboard Scripts ############################
 
@@ -199,7 +232,7 @@ module "bigip" {
   f5_ssh_publickey                  = var.ssh_key
   mgmt_subnet_ids                   = [{ "subnet_id" = var.mgmtSubnet, "public_ip" = true, "private_ip_primary" = google_compute_address.mgt.address }]
   external_subnet_ids               = [{ "subnet_id" = var.extSubnet, "public_ip" = true, "private_ip_primary" = google_compute_address.ext.address, "private_ip_secondary" = google_compute_address.vip.address }]
-  internal_subnet_ids               = [{ "subnet_id" = var.intSubnet, "public_ip" = false, "private_ip_primary" = google_compute_address.int.address, "private_ip_secondary" = "" }]
+  internal_subnet_ids               = [{ "subnet_id" = var.intSubnet, "public_ip" = false, "private_ip_primary" = google_compute_address.int.address, "private_ip_secondary" = "" }, { "subnet_id" = var.intSubnet2, "public_ip" = false, "private_ip_primary" = google_compute_address.int1-2.address, "private_ip_secondary" = "" }, { "subnet_id" = var.intSubnet3, "public_ip" = false, "private_ip_primary" = google_compute_address.int1-3.address, "private_ip_secondary" = "" }]
   zone                              = var.gcp_zone_1
   custom_user_data                  = local.f5_onboard1
   sleep_time                        = "30s"
@@ -222,7 +255,7 @@ module "bigip2" {
   f5_ssh_publickey                  = var.ssh_key
   mgmt_subnet_ids                   = [{ "subnet_id" = var.mgmtSubnet, "public_ip" = true, "private_ip_primary" = google_compute_address.mgt2.address }]
   external_subnet_ids               = [{ "subnet_id" = var.extSubnet, "public_ip" = true, "private_ip_primary" = google_compute_address.ext2.address, "private_ip_secondary" = "" }]
-  internal_subnet_ids               = [{ "subnet_id" = var.intSubnet, "public_ip" = false, "private_ip_primary" = google_compute_address.int2.address, "private_ip_secondary" = "" }]
+  internal_subnet_ids               = [{ "subnet_id" = var.intSubnet, "public_ip" = false, "private_ip_primary" = google_compute_address.int2.address, "private_ip_secondary" = "" }, { "subnet_id" = var.intSubnet2, "public_ip" = false, "private_ip_primary" = google_compute_address.int2-2.address, "private_ip_secondary" = "" }, { "subnet_id" = var.intSubnet3, "public_ip" = false, "private_ip_primary" = google_compute_address.int2-3.address, "private_ip_secondary" = "" }]
   zone                              = var.gcp_zone_2
   custom_user_data                  = local.f5_onboard2
   sleep_time                        = "30s"

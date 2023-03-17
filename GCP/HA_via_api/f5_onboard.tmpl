@@ -120,6 +120,70 @@ cat << 'EOF' >> /config/cloud/runtime-init-conf.yaml
     headers:
       - name: Metadata-Flavor
         value: Google
+  - name: GATEWAY_INTERNAL2
+    type: metadata
+    metadataProvider:
+      environment: gcp
+      type: network
+      field: ip
+      index: 3
+      ipcalc: first
+  - name: NETWORK_BASE_INTERNAL2
+    type: metadata
+    metadataProvider:
+      environment: gcp
+      type: network
+      field: ip
+      index: 3
+      ipcalc: base
+  - name: NETWORK_MASK_INTERNAL2
+    type: metadata
+    metadataProvider:
+      environment: gcp
+      type: network
+      field: ip
+      index: 3
+      ipcalc: bitmask
+  - name: MTU_INTERNAL2
+    type: url
+    value: http://169.254.169.254/computeMetadata/v1/instance/network-interfaces/3/?recursive=true
+    query: mtu
+    returnType: number
+    headers:
+      - name: Metadata-Flavor
+        value: Google
+  - name: GATEWAY_INTERNAL3
+    type: metadata
+    metadataProvider:
+      environment: gcp
+      type: network
+      field: ip
+      index: 4
+      ipcalc: first
+  - name: NETWORK_BASE_INTERNAL3
+    type: metadata
+    metadataProvider:
+      environment: gcp
+      type: network
+      field: ip
+      index: 4
+      ipcalc: base
+  - name: NETWORK_MASK_INTERNAL3
+    type: metadata
+    metadataProvider:
+      environment: gcp
+      type: network
+      field: ip
+      index: 4
+      ipcalc: bitmask
+  - name: MTU_INTERNAL3
+    type: url
+    value: http://169.254.169.254/computeMetadata/v1/instance/network-interfaces/4/?recursive=true
+    query: mtu
+    returnType: number
+    headers:
+      - name: Metadata-Flavor
+        value: Google
   - name: SELF_IP_EXTERNAL
     type: metadata
     metadataProvider:
@@ -135,6 +199,22 @@ cat << 'EOF' >> /config/cloud/runtime-init-conf.yaml
       type: network
       field: ip
       index: 2
+      ipcalc: address
+  - name: SELF_IP_INTERNAL2
+    type: metadata
+    metadataProvider:
+      environment: gcp
+      type: network
+      field: ip
+      index: 3
+      ipcalc: address
+  - name: SELF_IP_INTERNAL3
+    type: metadata
+    metadataProvider:
+      environment: gcp
+      type: network
+      field: ip
+      index: 4
       ipcalc: address
   - name: DNS_SERVER
     type: static
@@ -269,6 +349,32 @@ extension_services:
             vlan: internal
             allowService: default
             trafficGroup: traffic-group-local-only
+          internal2:
+            class: VLAN
+            tag: 4090
+            mtu: '{{{ MTU_INTERNAL2 }}}'
+            interfaces:
+              - name: '1.3'
+                tagged: false
+          internal2-localself:
+            class: SelfIp
+            address: '{{{ SELF_IP_INTERNAL2 }}}/32'
+            vlan: internal2
+            allowService: default
+            trafficGroup: traffic-group-local-only
+          internal3:
+            class: VLAN
+            tag: 4091
+            mtu: '{{{ MTU_INTERNAL2 }}}'
+            interfaces:
+              - name: '1.4'
+                tagged: false
+          internal3-localself:
+            class: SelfIp
+            address: '{{{ SELF_IP_INTERNAL3 }}}/32'
+            vlan: internal3
+            allowService: default
+            trafficGroup: traffic-group-local-only
           ext_gw_interface:
             class: Route
             target: external
@@ -294,6 +400,26 @@ extension_services:
             gw: '{{{ GATEWAY_INTERNAL }}}'
             network: '{{{ NETWORK_BASE_INTERNAL }}}/{{{ NETWORK_MASK_INTERNAL }}}'
             mtu: '{{{ MTU_INTERNAL }}}'
+          int2_gw_interface:
+            class: Route
+            target: internal2
+            network: '{{{ GATEWAY_INTERNAL2 }}}/32'
+            mtu: '{{{ MTU_INTERNAL2 }}}'
+          int2_rt:
+            class: Route
+            gw: '{{{ GATEWAY_INTERNAL2 }}}'
+            network: '{{{ NETWORK_BASE_INTERNAL2 }}}/{{{ NETWORK_MASK_INTERNAL2 }}}'
+            mtu: '{{{ MTU_INTERNAL2 }}}'
+          int3_gw_interface:
+            class: Route
+            target: internal3
+            network: '{{{ GATEWAY_INTERNAL3 }}}/32'
+            mtu: '{{{ MTU_INTERNAL3 }}}'
+          int3_rt:
+            class: Route
+            gw: '{{{ GATEWAY_INTERNAL3 }}}'
+            network: '{{{ NETWORK_BASE_INTERNAL3 }}}/{{{ NETWORK_MASK_INTERNAL3 }}}'
+            mtu: '{{{ MTU_INTERNAL3 }}}'
           configsync:
             class: ConfigSync
             configsyncIp: /Common/internal-localself/address

@@ -8,6 +8,8 @@
 
 # .tfvars files
 *.tfvars
+**/outputs.tf
+outputs.tf
 
 # Terraform crash log
 **/crash.log

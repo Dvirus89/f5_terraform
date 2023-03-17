@@ -1,27 +1,36 @@
+# Google Environment
+projectPrefix  = "dvir"
+gcp_project_id = "projectxyz"
+gcp_region     = "me-west1" # Israel - me-west1
+gcp_zone_1     = "me-west1-a" 
+gcp_zone_2     = "me-west1-b"
+svc_acct       = "svc-accoun-demot"
+resourceOwner  = "dvir"
+
+
 # BIG-IP Environment
 f5_username = "admin"
-f5_password = "Default12345!"
-ssh_key     = "~/.ssh/id_rsa.pub"
-mgmtVpc     = "xxxxx-net-mgmt"
-extVpc      = "xxxxx-net-ext"
-intVpc      = "xxxxx-net-int"
-mgmtSubnet  = "xxxxx-subnet-mgmt"
-extSubnet   = "xxxxx-subnet-ext"
-intSubnet   = "xxxxx-subnet-int"
+f5_password = "NicePass$"
+machine_type = "n2-standard-8"
+min_cpu_platform = "Intel Cascade Lake"
+
+#ssh_key     = ""
+mgmtVpc     = "vpc-dvir-tf-existing"
+extVpc      = "dvir-ext1"
+intVpc      = "dvir-int1"
+mgmtSubnet  = "vpc-dvir-tf-subnet-mgmt"    #10.30.0.0/24
+extSubnet   = "sub-dvir-ext1"    #10.31.0.0/24
+intSubnet   = "sub-dvir-int1"    #10.32.0.0/24
+intSubnet2  = "sub-dvir-int2"    #10.33.0.0/24
+intSubnet3  = "sub-dvir-int3"    #10.34.0.0/24
 dns_suffix  = "example.com"
+license1    = "XXXXX-XXXXX-XXXXX-XXXXX-XXXXXXX"
+license2    = "XXXXX-XXXXX-XXXXX-XXXXX-XXXXXXX"
 
 # BIG-IQ Environment
-bigIqUsername = "admin"
-bigIqPassword = "Default12345!"
+#bigIqUsername = "admin"
+#bigIqPassword = "Default12345!"
 
-# Google Environment
-projectPrefix  = "mydemo123"
-gcp_project_id = "xxxxx"
-gcp_region     = "us-west1"
-gcp_zone_1     = "us-west1-a"
-gcp_zone_2     = "us-west1-b"
-svc_acct       = "xxxxx@xxxxx.iam.gserviceaccount.com"
-resourceOwner  = "mylastname"
 
 # Secret Manager - Uncomment to use Secret Manager integration
 #gcp_secret_manager_authentication = true

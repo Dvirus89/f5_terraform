@@ -227,6 +227,7 @@ module "bigip" {
   vm_name                           = var.vm_name == "" ? format("%s-bigip1-%s", var.projectPrefix, random_id.buildSuffix.hex) : var.vm_name
   project_id                        = var.gcp_project_id
   machine_type                      = var.machine_type
+  min_cpu_platform                  = var.min_cpu_platform
   image                             = var.image_name
   f5_username                       = var.f5_username
   f5_ssh_publickey                  = var.ssh_key
@@ -250,6 +251,7 @@ module "bigip2" {
   vm_name                           = var.vm2_name == "" ? format("%s-bigip2-%s", var.projectPrefix, random_id.buildSuffix.hex) : var.vm2_name
   project_id                        = var.gcp_project_id
   machine_type                      = var.machine_type
+  min_cpu_platform                  = var.min_cpu_platform
   image                             = var.image_name
   f5_username                       = var.f5_username
   f5_ssh_publickey                  = var.ssh_key

@@ -554,6 +554,7 @@ if [[ ${NIC_COUNT} && ! -f /config/nicswap_finished ]]; then
    tmsh modify sys management-dhcp sys-mgmt-dhcp-config request-options delete { ntp-servers }
    # JeffGiroux - Use GCP metadata server for DNS during onboarding
    tmsh modify sys dns name-servers add { 169.254.169.254 }
+   echo -e "${f5_password}\n${f5_password}" | tmsh modify auth password admin; history -d $(history 1)
    tmsh save /sys config
    /usr/bin/touch /config/nicswap_finished
    # Dvir Perets - Change NIC drivers
@@ -568,6 +569,9 @@ if [[ ! -f /config/nicswap_finished ]]; then
   #!/bin/bash
   source /usr/lib/bigstart/bigip-ready-functions
   wait_bigip_ready
+  echo `date`
+  echo "go ahead and install the license manually now..."
+  sleep 600
   for i in {1..30}; do
     curl -fv --retry 1 --connect-timeout 5 -L ${INIT_URL} -o "/var/config/rest/downloads/f5-bigip-runtime-init.gz.run" && break || sleep 10
   done

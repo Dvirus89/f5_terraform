@@ -200,6 +200,36 @@ variable "INIT_URL" {
   default     = "https://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.6.0/dist/f5-bigip-runtime-init-1.6.0-1.gz.run"
   description = "URL to download the BIG-IP runtime init"
 }
+variable "DO_VER" {
+  type        = string
+  default     = ""
+  description = "Version to user for the BIG-IP Declarative Onboarding module"
+}
+variable "AS3_VER" {
+  type        = string
+  default     = ""
+  description = "Version to user for the BIG-IP Application Service Extension 3 (AS3) module"
+}
+variable "TS_VER" {
+  type        = string
+  default     = ""
+  description = "Version to user for the BIG-IP Telemetry Streaming module"
+}
+variable "FAST_VER" {
+  type        = string
+  default     = ""
+  description = "Version to user for the BIG-IP FAST module"
+}
+variable "CFE_VER" {
+  description = "Version to user for the BIG-IP Cloud Failover Extension module"
+  type        = string
+  default     = ""
+}
+variable "INIT_VER" {
+  type        = string
+  default     = ""
+  description = "Version to user for the BIG-IP runtime init"
+}
 variable "libs_dir" {
   type        = string
   default     = "/config/cloud/gcp/node_modules"

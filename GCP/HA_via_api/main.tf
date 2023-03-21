@@ -14,7 +14,8 @@ resource "random_id" "buildSuffix" {
 # Storage Bucket
 resource "google_storage_bucket" "main" {
   name          = format("%s-storage-%s", var.projectPrefix, random_id.buildSuffix.hex)
-  location      = "US"
+  location      = "ME-WEST1"
+  #uniform_bucket_level_access      = true
   force_destroy = true
   labels = {
     owner                   = var.resourceOwner

@@ -313,6 +313,10 @@ extension_services:
             search:
               - '{{{ DNS_SUFFIX }}}'
               - f5.com
+          myLicense:
+            class: License
+            licenseType: regKey
+            regKey: '${regKey}'
           myNtp:
             class: NTP
             servers:
@@ -569,13 +573,15 @@ if [[ ! -f /config/nicswap_finished ]]; then
   #!/bin/bash
   source /usr/lib/bigstart/bigip-ready-functions
   wait_bigip_ready
-  echo `date`
-  echo "go ahead and install the license manually now..."
-  sleep 600
+  ### START - Manual license installation if needed ###
+  #echo `date`
+  #echo "go ahead and install the license manually now..."
+  #sleep 600
+  ### END - Manual license installation if needed ###
   for i in {1..30}; do
     curl -fv --retry 1 --connect-timeout 5 -L ${INIT_URL} -o "/var/config/rest/downloads/f5-bigip-runtime-init.gz.run" && break || sleep 10
   done
-  bash /var/config/rest/downloads/f5-bigip-runtime-init.gz.run -- '--cloud gcp' 2>&1
+  bash /var/config/rest/downloads/f5-bigip-runtime-init.gz.run -- '--cloud gcp --skip-verify --skip-toolchain-metadata-sync' 2>&1
   /usr/local/bin/f5-bigip-runtime-init --config-file /config/cloud/runtime-init-conf.yaml 2>&1
   /usr/bin/touch /config/startup_finished
 EOF
